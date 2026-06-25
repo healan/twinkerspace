@@ -1,0 +1,71 @@
+.capabilities {
+  padding: 88px 0;
+  background: #fafafa;
+}
+
+.capabilities-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.capabilities-header {
+  flex: 1;
+  text-align: left;
+}
+
+.capabilities-header h2 {
+  font-size: 32px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.capabilities-header p {
+  font-size: 16px;
+  color: #666;
+  line-height: 24px;
+  max-width: 600px;
+}
+
+.capabilities-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 100px;
+  background: white;
+  border-radius: 20px;
+  padding: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: left;
+  max-width: none;   /* 추가 */
+  width: 110%;       /* 추가 */
+}
+
+.capability-column h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2563EB;
+  margin-bottom: 24px;
+}
+
+.capability-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.capability-column li {
+  font-size: 16px;
+  line-height: 24px;
+  color: #666;
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.capability-column li::before {
+  content: '•';
+  color: #2563EB;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
