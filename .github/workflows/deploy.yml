@@ -1,15 +1,17 @@
-name: Test SSH
+name: Deploy to EC2
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH Test
-        uses: appleboy/ssh-action@v1
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
 
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -17,6 +19,25 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
 
           script: |
-            pwd
-            whoami
-            ls
+            cd ~/twinkerspace
+
+            echo "=== Pull latest code ==="
+            git pull origin main
+
+            echo "=== Build Frontend ==="
+            cd web
+            npm install
+            npm run build
+
+            sudo rm -rf /var/www/twinkerspace/*
+            sudo cp -r dist/* /var/www/twinkerspace/
+
+            echo "=== Restart Backend ==="
+            cd ../server
+            npm install
+
+            pm2 restart twinkerspace-api || pm2 start index.js --name twinkerspace-api
+
+            sudo systemctl reload nginx
+
+            echo "✅ Deployment Complete"

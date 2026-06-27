@@ -8,12 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Dependencies
-src/node_modules
+web/node_modules
 server/node_modules
 
 # Build output
-src/dist
-src/dist-ssr
+web/dist
+server/dist
 *.local
 
 # Editor directories and files
@@ -29,7 +29,7 @@ src/dist-ssr
 
 # Env files
 server/.env
-src/.env
+web/.env
 
 # Misc
 instruction.md
