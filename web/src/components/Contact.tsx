@@ -8,7 +8,6 @@ const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [emailError, setEmailError] = useState('');
-  const VITE_API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.target.name === 'email') setEmailError('');
@@ -20,7 +19,7 @@ const Contact: React.FC = () => {
     setEmailError('');
     setStatus('loading');
     try {
-      const res = await fetch(`${VITE_API_URL}/api/contact`, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
