@@ -122,3 +122,26 @@
   font-weight: 700;
   background: #eff6ff;
 }
+
+@media (max-width: 768px) {
+  .nav {
+    gap: 16px;
+  }
+  .nav a {
+    font-size: 11px;
+    letter-spacing: 0.4px;
+  }
+  .brand {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav a[href="#capabilities"],
+  .nav a[href="#services"] {
+    display: none;
+  }
+  .container {
+    padding: 0 16px;
+  }
+}

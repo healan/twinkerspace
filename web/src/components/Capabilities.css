@@ -76,3 +76,33 @@
   position: absolute;
   left: 0;
 }
+
+@media (max-width: 1024px) {
+  .capabilities .container {
+    padding: 0 24px;
+  }
+  .capabilities-content {
+    gap: 40px;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .capabilities {
+    padding: 64px 0;
+  }
+  .capabilities-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 24px;
+  }
+  .capabilities-header h2 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .capabilities .container {
+    padding: 0 16px;
+  }
+}

@@ -18,6 +18,25 @@
   gap: 24px;
 }
 
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .services {
+    padding: 64px 0;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .services h2 {
+    font-size: 26px;
+    margin-bottom: 36px;
+  }
+}
+
 .service-card {
   background: white;
   border-radius: 20px;

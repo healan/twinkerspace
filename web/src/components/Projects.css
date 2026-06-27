@@ -351,3 +351,35 @@
   from { transform: translateY(24px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+@media (max-width: 768px) {
+  .projects {
+    padding: 64px 0;
+  }
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .projects h2 {
+    font-size: 26px;
+    margin-bottom: 36px;
+  }
+  .modal-panel {
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .prj-container {
+    padding: 0 16px;
+  }
+  .project-content {
+    padding: 20px 16px;
+  }
+}
