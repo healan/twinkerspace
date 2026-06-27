@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: 🚀 Deploy TwinkerSpace
 
 on:
   push:
@@ -7,37 +7,66 @@ on:
 
 jobs:
   deploy:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Deploy to EC2
+
         uses: appleboy/ssh-action@v1.2.0
 
         with:
+
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
 
+          script_stop: true
+
           script: |
+
+            echo "========== START DEPLOY =========="
+
             cd ~/twinkerspace
 
-            echo "=== Pull latest code ==="
+            echo "Pull latest code..."
             git pull origin main
 
-            echo "=== Build Frontend ==="
-            cd web
-            npm install
+            ################################
+            # Backend
+            ################################
+
+            echo "Installing backend..."
+
+            cd server
+
+            npm ci || npm install
+
+            pm2 restart twinkerspace-api
+
+            ################################
+            # Frontend
+            ################################
+
+            echo "Building frontend..."
+
+            cd ../web
+
+            npm ci || npm install
+
             npm run build
 
             sudo rm -rf /var/www/twinkerspace/*
+
             sudo cp -r dist/* /var/www/twinkerspace/
 
-            echo "=== Restart Backend ==="
-            cd ../server
-            npm install
+            ################################
+            # Nginx
+            ################################
 
-            pm2 restart twinkerspace-api || pm2 start index.js --name twinkerspace-api
+            sudo nginx -t
 
             sudo systemctl reload nginx
 
-            echo "✅ Deployment Complete"
+            echo "========== DEPLOY SUCCESS =========="
