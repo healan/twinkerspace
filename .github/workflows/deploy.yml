@@ -1,23 +1,26 @@
-name: 🚀 Deploy TwinkerSpace
+name: Deploy TwinkerSpace
 
 on:
   push:
     branches:
       - main
 
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
-
+    name: Deploy to AWS EC2
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Deploy to EC2
-
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
 
         with:
-
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
@@ -26,30 +29,38 @@ jobs:
 
           script: |
 
-            echo "========== START DEPLOY =========="
+            echo "========================================="
+            echo " TwinkerSpace Deployment Started"
+            echo "========================================="
 
             cd ~/twinkerspace
 
-            echo "Pull latest code..."
+            echo ""
+            echo " Pull latest source..."
             git pull origin main
 
-            ################################
+            ########################################
             # Backend
-            ################################
+            ########################################
 
-            echo "Installing backend..."
+            echo ""
+            echo " Installing Backend..."
 
             cd server
 
             npm ci || npm install
 
-            pm2 restart twinkerspace-api
+            echo ""
+            echo " Restarting API..."
 
-            ################################
+            pm2 restart twinkerspace-api || pm2 start index.js --name twinkerspace-api
+
+            ########################################
             # Frontend
-            ################################
+            ########################################
 
-            echo "Building frontend..."
+            echo ""
+            echo " Building Frontend..."
 
             cd ../web
 
@@ -57,16 +68,58 @@ jobs:
 
             npm run build
 
+            echo ""
+            echo " Deploying React build..."
+
             sudo rm -rf /var/www/twinkerspace/*
 
             sudo cp -r dist/* /var/www/twinkerspace/
 
-            ################################
+            ########################################
             # Nginx
-            ################################
+            ########################################
+
+            echo ""
+            echo " Checking Nginx..."
 
             sudo nginx -t
 
             sudo systemctl reload nginx
 
-            echo "========== DEPLOY SUCCESS =========="
+            ########################################
+            # Health Check
+            ########################################
+
+            echo ""
+            echo " Waiting for server..."
+
+            sleep 5
+
+            echo ""
+            echo " Frontend Health Check..."
+
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost)
+
+            echo "Frontend Status : $STATUS"
+
+            if [ "$STATUS" != "200" ]; then
+              echo "❌ Frontend Health Check Failed"
+              exit 1
+            fi
+
+            echo ""
+            echo "🔌 API Health Check..."
+
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost/api/health)
+
+            echo "API Status : $STATUS"
+
+            if [ "$STATUS" != "200" ]; then
+              echo "❌ API Health Check Failed"
+              exit 1
+            fi
+
+            echo ""
+            echo "========================================="
+            echo "✅ Deployment Successful!"
+            echo "========================================="
