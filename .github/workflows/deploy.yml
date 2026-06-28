@@ -98,7 +98,7 @@ jobs:
             echo ""
             echo " Frontend Health Check..."
 
-            STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost)
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" https://twinkerspace.duckdns.org)
 
             echo "Frontend Status : $STATUS"
 
@@ -110,7 +110,7 @@ jobs:
             echo ""
             echo "🔌 API Health Check..."
 
-            STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost/api/health)
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" https://twinkerspace.duckdns.org/api/health)
 
             echo "API Status : $STATUS"
 
